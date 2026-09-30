@@ -1,0 +1,132 @@
+Assignment 2
+
+Questions Note: Refer to the above schema tables for column names and datatypes.
+Q1) Create the tables Member, Books, and Issue WITHOUT constraints.
+-> create table member(
+    member_id int,member_name varchar(30),member_address varchar(50),acc_open_date date,
+    membership_type varchar(20),fees_paid decimal(10,2),max_books_allowed int,penalty_amount decimal(10,2));
+
+-> create table books(
+   book_no int,book_name varchar(30),author_name varchar(30),
+   cost decimal(10,2),category varchar(15));
+
+->create table issue(
+  lib_issue_Id int,book_no int,
+  member_id int,issue_date date,return_date date);
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Q2) Display the structure of all three tables using DESC. 
+->desc member;
+->desc books;
+->desc issue;
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Q3) Drop the Member table. 
+->drop table member;
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q4) Create the Member table again with these constraints: - Member_Id must be PRIMARY KEY - Membership_Type must allow only:
+  ('Lifetime','Annual','Half Yearly','Quarterly') 
+->create table member(member_id int primary key,member_name varchar(30),member_address varchar(50),acc_open_date date,
+  membership_type varchar(20) check(membership_type in('Liftime','Annual','Half Yearly','Quarterly')),
+  fees_paid decimal(10,2),max_books_allowed int,penalty_amount decimal(10,2));
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q5) Alter Member table to increase Member_Name size from 30 to 40. 
+-> alter table member
+   modify member_name varchar(40);
+
+----------------------------------------------------------------------------------------------------------------------------------
+6) Add a column Reference (VARCHAR (30)) to Issue table. 
+->alter table isssue
+  add column reference varchar(30);
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q7) Drop the column Reference from Issue table. 
+-> alter table issue
+   drop column reference;
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q8) Rename the table Issue to Lib_Issue. 
+-> rename table issue to lib_issue;
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q9) Insert the following records into Member table: 
+->insert into member(member_id,member_name,member_address,acc_open_date, membership_type,fees_paid,max_books_allowed,
+   penalty_amount) values (1,"Richa Sharma","Pune","05-12-10","Lifetime",25000,5,50),
+                           (2,"Garima Sen","Pune","26-08-11","Annual",1000,3,null);
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q10) Insert at least 5 more records with suitable data into Member table. 
+-> insert into member(member_id,member_name,member_address,acc_open_date, membership_type,fees_paid,max_books_allowed,
+penalty_amount) values (3,"Bhumika ","Mumbai","26-08-05","Annual",7000,2,100),      
+                       (4,"Gauri","Pune","2025-09-07","Lifetime",8000,4,200),
+                       (5,"Vaishnavi","Pune","2026-09-05","Annual",7000,2,400); 
+----------------------------------------------------------------------------------------------------------------------------------
+Q11) Try to decrease Member_Name size from 40 to 20. If it fails, mention the reason. 
+-> alter table member
+   modify member_name varchar(20);
+----------------------------------------------------------------------------------------------------------------------------------
+Q12) Add a CHECK constraint: Max_Books_Allowed must be less than 100. 
+-> alter table member
+   add constraint ck_book_1
+   check (max_books_allowed <= 100);
+----------------------------------------------------------------------------------------------------------------------------------
+Q13) Create a backup table named MemberBackup using the Member table. Use the following query: CREATE TABLE MemberBackup AS 
+SELECT *FROM Member; 
+
+->CREATE TABLE MemberBackup AS 
+  SELECT *FROM Member; 
+----------------------------------------------------------------------------------------------------------------------------------
+Q14) Add named constraints: - Max_Books_Allowed < 100 - Penalty_Amount <= 100
+-> alter table member
+   add constraint chk_max_book check(max_books_allowed < 100),
+   add constraint chk_penalty_amount check(penalty_amount <=1000);
+----------------------------------------------------------------------------------------------------------------------------------
+Q15) Drop the Books table. 
+-> drop table books;
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q16) Create Books table again with constraints: - Book_No PRIMARY KEY - Book_Name NOT NULL - Category must be one of:
+    ('System','Fiction','Database','RDBMS','Others','Science') 
+->  create table books(book_no int primary key,book_name varchar(50) not null,author_name varchar(50),cost decimal(7,2),
+    category varchar(50) check(category in ('system','fiction','database','RDBMS','Others','Science'))); 
+---------------------------------------------------------------------------------------------------------------------------------
+Q17) Insert the following data into Books table: 
+->   insert into books(book_no,book_name,author_name,cost,category) values (101,"Let Us C","Denis Ritchie",450,"System"),
+                       (102,"Oracle Complete Ref","Loni",550,"Database"), (103,"Mastering SQL","Loni",250,"Database"),
+                       (104,"PL SQL REf","Scott Urman",750,"Database"),(105,"National Geographic","Adis Scott",1000,"Science");
+----------------------------------------------------------------------------------------------------------------------------------
+Q18) Insert at least 5 more records into Books table. 
+-> insert into books(book_no,book_name,author_name,cost,category) values (101,"Let Us C","Denis Ritchie",450,"System"),
+                       (102,"Oracle Complete Ref","Loni",550,"Database"), (103,"Mastering SQL","Loni",250,"Database"),
+                       (104,"PL SQL REf","Scott Urman",750,"Database"),(105,"National Geographic","Adis Scott",1000,"Science");
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q19) View all data from Member and Books tables using SELECT. 
+-> select * from member;
+-> select * from books;
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q20) Drop Lib_Issue table. 
+-> drop table lib_issue;
+
+----------------------------------------------------------------------------------------------------------------------------------
+Q21) Create Issue table again with constraints: - Lib_Issue_Id PRIMARY KEY - Book_No FOREIGN KEY REFERENCES Books(Book_No)
+ - Member_Id FOREIGN KEY REFERENCES Member(Member_Id) 
+-> create table issue
+   (lib_issue_id int primary key,
+    book_no int,member_id int,
+    issue_date date,foreign key(book_no) references books(book_no),
+    foreign key(member_id) references member(member_id)); 
+----------------------------------------------------------------------------------------------------------------------------------
+Q22) Insert the following records into Issue table: 
+-> insert into issue(lib_issue_id,book_no,member_id,issue_date) values (7001,101,1,"2024-12-10"),
+                                                                       (7002,102,2,"2024-12-25"),
+                                                                       (7003,104,1,"2025-01-15"),
+                                                                       (7004,101,1,"2025-02-04");
+-----------------------------------------------------------------------------------------------------------------------------------
+Q23) Try inserting an Issue record with Member_Id not existing in Member table. Observe and write the error. 
+-> 
